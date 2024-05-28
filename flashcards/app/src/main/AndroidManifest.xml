@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Flashcards"
         tools:targetApi="31">
         <activity
+            android:name=".AddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SessionActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -32,24 +32,22 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <TextView
-        android:id="@+id/allFlashcardsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:text="All flashcards: "
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appTitle" />
-
     <Button
         android:id="@+id/startButton"
         android:layout_width="205dp"
         android:layout_height="85dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="36dp"
         android:text="Start Session"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/allFlashcardsText" />
+        app:layout_constraintTop_toBottomOf="@+id/decksList" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/decksList"
+        android:layout_width="363dp"
+        android:layout_height="409dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appTitle" />
 </androidx.constraintlayout.widget.ConstraintLayout>
