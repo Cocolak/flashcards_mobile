@@ -5,15 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center|top"
-        android:layout_marginTop="32dp"
-        android:text="Session"
-        android:textAlignment="center"
-        android:textSize="34sp"
-        android:textStyle="bold"/>
+        android:minHeight="60dp"
+        android:background="@color/black">
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center"
+            android:background="@android:color/transparent"
+            android:drawableLeft="@drawable/ic_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/app_name"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/optionsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center"
+            android:background="@android:color/transparent"
+            android:drawableRight="@drawable/ic_dots_menu" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,64 +43,110 @@
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/fronText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
-            android:layout_marginStart="48dp"
-            android:text="Front:"
-            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/backText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="96dp"
-            android:layout_marginStart="48dp"
-            android:text="Back: "
-            android:textSize="20sp" />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/frontCard"
+            android:layout_width="330dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="20dp"
+            android:layout_marginBottom="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="150dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/knowButton"
-                android:layout_width="140dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
-                android:text="Know" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:text="FRONT"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
 
-            <Button
-                android:id="@+id/showButton"
-                android:layout_width="140dp"
-                android:layout_height="50dp"
-                android:text="Show answer"
-                android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/backText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="sample front name"
+                    android:textSize="22sp"
+                    android:textAlignment="center"/>
 
-            <Button
-                android:id="@+id/dknowButton"
-                android:layout_width="140dp"
-                android:layout_height="50dp"
-                android:text="Don't know" />
+            </LinearLayout>
 
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/backCard"
+            android:layout_width="330dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            app:cardCornerRadius="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:text="BACK"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/frontText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="sample back name"
+                    android:textSize="22sp"
+                    android:textAlignment="center"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/backButton"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="left|bottom"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="16dp"
-        android:clickable="true"
-        app:srcCompat="@mipmap/ic_back" />
+        android:layout_marginBottom="32dp"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom|center"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/knowButton"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:text="Know" />
+
+        <Button
+            android:id="@+id/showButton"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:text="Show answer"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/dknowButton"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:text="Don't know" />
+
+    </LinearLayout>
 
 
 </FrameLayout>

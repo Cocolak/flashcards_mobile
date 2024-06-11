@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -18,12 +19,9 @@ public class SessionActivity extends AppCompatActivity {
     DatabaseHelper dbHelper;
     ArrayList<ArrayList<String>> randomSession;
     int i = 0;
-    TextView frontText;
-    TextView backText;
-    Button dknowButton;
-    Button knowButton;
-    Button showButton;
-    FloatingActionButton backButton;
+    TextView frontText, backText;
+    CardView frontCard, backCard;
+    Button backButton, optionsButton, dknowButton, knowButton, showButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +35,15 @@ public class SessionActivity extends AppCompatActivity {
         dbHelper.TABLE_NAME = dbHelper.normal_deck_name_to_coded(deck_name); // Change TABLE_NAME from normal to coded
 
         randomSession = dbHelper.getRandomSession();
-        frontText = findViewById(R.id.fronText);
+        frontCard = findViewById(R.id.frontCard);
+        frontText = findViewById(R.id.frontText);
+        backCard = findViewById(R.id.backCard);
         backText = findViewById(R.id.backText);
+        backButton = findViewById(R.id.backButton);
+        optionsButton = findViewById(R.id.optionsButton);
         showButton = findViewById(R.id.showButton);
         dknowButton = findViewById(R.id.dknowButton);
         knowButton = findViewById(R.id.knowButton);
-        backButton = findViewById(R.id.backButton);
 
         loadFlashcard();
 
@@ -80,11 +81,11 @@ public class SessionActivity extends AppCompatActivity {
         if (i < randomSession.size()) {
             dknowButton.setVisibility(View.GONE);
             knowButton.setVisibility(View.GONE);
-            backText.setVisibility(View.INVISIBLE);
+            backCard.setVisibility(View.INVISIBLE);
             showButton.setVisibility(View.VISIBLE);
 
-            String frontTextText = "Front: " + randomSession.get(i).get(0);
-            String backTextText = "Back: " + randomSession.get(i).get(1);
+            String frontTextText = randomSession.get(i).get(0);
+            String backTextText = randomSession.get(i).get(1);
 
             frontText.setText(frontTextText);
             backText.setText(backTextText);
@@ -98,7 +99,7 @@ public class SessionActivity extends AppCompatActivity {
     public void showAnswer() {
         dknowButton.setVisibility(View.VISIBLE);
         knowButton.setVisibility(View.VISIBLE);
-        backText.setVisibility(View.VISIBLE);
+        backCard.setVisibility(View.VISIBLE);
         showButton.setVisibility(View.GONE);
     }
 

@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,14 +24,13 @@ public class MainActivity extends AppCompatActivity implements DecksAdapter.OnIt
     DecksAdapter adapter;
 
     RecyclerView decksList;
-    Button taskButton;
-    Button deckButton;
+
+    FloatingActionButton cardButton, deckButton;
 
     // Dialog Box Variables
     Dialog addDeckDialog;
     EditText deckNameText;
-    Button cancelButton;
-    Button confirmButton;
+    Button cancelButton, confirmButton;
 
 
     @Override
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements DecksAdapter.OnIt
 
         // Main Variables
         decksList = findViewById(R.id.decksList);
-        taskButton = findViewById(R.id.newTaskButton);
+        cardButton = findViewById(R.id.newCardButton);
         deckButton = findViewById(R.id.newDeckButton);
 
         // Dialog Box Variables
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements DecksAdapter.OnIt
         decksList.setLayoutManager(new LinearLayoutManager(this));
 
         // OnClickListeners
-        taskButton.setOnClickListener(new View.OnClickListener() {
+        cardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent addActivityIntent = new Intent(MainActivity.this, AddActivity.class);
