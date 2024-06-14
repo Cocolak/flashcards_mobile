@@ -18,10 +18,8 @@ public class AddActivity extends AppCompatActivity {
     DatabaseHelper dbHelper = new DatabaseHelper(this);
     ArrayList<String> decksList;
     Spinner decksSpinner;
-    EditText frontEditText;
-    EditText backEditText;
-    Button cancelButton;
-    Button confirmButton;
+    EditText frontEditText,  backEditText;
+    Button backButton, confirmButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,12 +29,12 @@ public class AddActivity extends AppCompatActivity {
         decksSpinner = findViewById(R.id.decksSpinner);
         frontEditText = findViewById(R.id.frontEditText);
         backEditText = findViewById(R.id.backEditText);
-        cancelButton = findViewById(R.id.cancelButton);
         confirmButton = findViewById(R.id.confirmButton);
+        backButton = findViewById(R.id.backButton);
 
         createSpinner();
 
-        cancelButton.setOnClickListener(new View.OnClickListener() {
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -52,6 +50,8 @@ public class AddActivity extends AppCompatActivity {
 
                 dbHelper.TABLE_NAME = dbHelper.normal_deck_name_to_coded(selected_deck);
                 dbHelper.addFlashcard(frontText, backText);
+                frontEditText.getText().clear();
+                backEditText.getText().clear();
             }
         });
     }

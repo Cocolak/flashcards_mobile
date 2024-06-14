@@ -19,7 +19,7 @@ public class SessionActivity extends AppCompatActivity {
     DatabaseHelper dbHelper;
     ArrayList<ArrayList<String>> randomSession;
     int i = 0;
-    TextView frontText, backText;
+    TextView deckTitle, frontText, backText;
     CardView frontCard, backCard;
     Button backButton, optionsButton, dknowButton, knowButton, showButton;
 
@@ -37,6 +37,7 @@ public class SessionActivity extends AppCompatActivity {
         randomSession = dbHelper.getRandomSession();
         frontCard = findViewById(R.id.frontCard);
         frontText = findViewById(R.id.frontText);
+        deckTitle = findViewById(R.id.deckTitle);
         backCard = findViewById(R.id.backCard);
         backText = findViewById(R.id.backText);
         backButton = findViewById(R.id.backButton);
@@ -45,7 +46,9 @@ public class SessionActivity extends AppCompatActivity {
         dknowButton = findViewById(R.id.dknowButton);
         knowButton = findViewById(R.id.knowButton);
 
+        deckTitle.setText(deck_name);
         loadFlashcard();
+
 
         showButton.setOnClickListener(new View.OnClickListener() {
             @Override

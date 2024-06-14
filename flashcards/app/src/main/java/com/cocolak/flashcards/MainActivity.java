@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements DecksAdapter.OnIt
                 Toast.makeText(MainActivity.this, "Deck Added Successfully", Toast.LENGTH_SHORT).show();
                 refreshData();
                 addDeckDialog.dismiss();
+                deckNameText.getText().clear();
             }
         });
     }
