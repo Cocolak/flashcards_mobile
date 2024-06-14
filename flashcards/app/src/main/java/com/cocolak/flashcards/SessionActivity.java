@@ -10,14 +10,12 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 public class SessionActivity extends AppCompatActivity {
     String deck_name;
     DatabaseHelper dbHelper;
-    ArrayList<ArrayList<String>> randomSession;
+    ArrayList<ArrayList<String>> todaySession;
     int i = 0;
     TextView deckTitle, frontText, backText;
     CardView frontCard, backCard;
@@ -34,7 +32,7 @@ public class SessionActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         dbHelper.TABLE_NAME = dbHelper.normal_deck_name_to_coded(deck_name); // Change TABLE_NAME from normal to coded
 
-        randomSession = dbHelper.getRandomSession();
+        todaySession = dbHelper.getTodaySession();
         frontCard = findViewById(R.id.frontCard);
         frontText = findViewById(R.id.frontText);
         deckTitle = findViewById(R.id.deckTitle);
@@ -60,14 +58,16 @@ public class SessionActivity extends AppCompatActivity {
         dknowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFlashcard();
+                setNewDate(false);
+                loadFlashcard(); // next flashcard
             }
         });
 
         knowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFlashcard();
+                setNewDate(true);
+                loadFlashcard(); // next flashcard
             }
         });
 
@@ -81,14 +81,14 @@ public class SessionActivity extends AppCompatActivity {
     }
 
     public void loadFlashcard() {
-        if (i < randomSession.size()) {
+        if (i < todaySession.size()) {
             dknowButton.setVisibility(View.GONE);
             knowButton.setVisibility(View.GONE);
             backCard.setVisibility(View.INVISIBLE);
             showButton.setVisibility(View.VISIBLE);
 
-            String frontTextText = randomSession.get(i).get(0);
-            String backTextText = randomSession.get(i).get(1);
+            String frontTextText = todaySession.get(i).get(0);
+            String backTextText = todaySession.get(i).get(1);
 
             frontText.setText(frontTextText);
             backText.setText(backTextText);
@@ -104,6 +104,11 @@ public class SessionActivity extends AppCompatActivity {
         knowButton.setVisibility(View.VISIBLE);
         backCard.setVisibility(View.VISIBLE);
         showButton.setVisibility(View.GONE);
+    }
+
+    public void setNewDate(Boolean isRight) {
+        String flashcard_name = frontText.getText().toString();
+        dbHelper.setupFlashcard(isRight, flashcard_name);
     }
 
 }

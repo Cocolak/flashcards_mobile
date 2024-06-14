@@ -11,10 +11,8 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private  Context context;
@@ -25,6 +23,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ID = "id";
     private static final String COLUMN_FRONT = "front";
     private static final String COLUMN_BACK = "back";
+    public static final String COLUMN_LVL = "lvl";
+    public static final String COLUMN_DATE = "date";
+
+    // Info Table
     public static final String INFO_TABLE_NAME = "info_table";
     public static final String INFO_COLUMN_ID = "id";
     public static final String INFO_COLUMN_NAME = "name";
@@ -59,7 +61,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String createTable = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_FRONT + " TEXT, " +
-                COLUMN_BACK + " TEXT)";
+                COLUMN_BACK + " TEXT, " +
+                COLUMN_LVL + " TEXT, " +
+                COLUMN_DATE + " TEXT)";
         db.execSQL(createTable);
 
         String createTable2 = "CREATE TABLE IF NOT EXISTS " + INFO_TABLE_NAME + " (" +
@@ -114,7 +118,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String createTable = "CREATE TABLE IF NOT EXISTS " + generated_deck_name + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_FRONT + " TEXT, " +
-                COLUMN_BACK + " TEXT)";
+                COLUMN_BACK + " TEXT," +
+                COLUMN_LVL + " TEXT, " +
+                COLUMN_DATE + " TEXT)";
         db.execSQL(createTable);
 
     }
@@ -146,10 +152,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void addFlashcard(String front, String back) {
+        Date d = new Date();
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_FRONT, front);
         contentValues.put(COLUMN_BACK, back);
+        contentValues.put(COLUMN_LVL, "0");
+        contentValues.put(COLUMN_DATE, Long.toString(d.getTime()));
 
         long result = db.insert(TABLE_NAME, null, contentValues);
         if(result != -1) {
@@ -170,24 +179,87 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return flashcardsNumber;
     }
 
-    public ArrayList<ArrayList<String>> getRandomSession() {
+    public ArrayList<ArrayList<String>> getTodaySession() {
+        Date d = new Date();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT front, back FROM " + TABLE_NAME;
+        String query = "SELECT front, back FROM " + TABLE_NAME + " WHERE " + COLUMN_DATE + "<='" +d.getTime() + "' ORDER BY " + COLUMN_DATE + " ASC;";
         Cursor cursor = db.rawQuery(query, null);
 
-        ArrayList<ArrayList<String>> randomSession = new ArrayList<>();
+        ArrayList<ArrayList<String>> todaySession = new ArrayList<>();
         while(cursor.moveToNext()) {
             ArrayList<String> listRow = new ArrayList<>();
             listRow.add(cursor.getString(0));
             listRow.add(cursor.getString(1));
-            randomSession.add(listRow);
+            todaySession.add(listRow);
         }
 
-        // Shuffle Array
-        Collections.shuffle(randomSession, new Random(System.nanoTime()));
-
         cursor.close();
-        return randomSession;
+        return todaySession;
+    }
+
+    public void setupFlashcard(Boolean isRight, String flashcard_front_name) {
+        Date d = new Date();
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<String> flashcardInfo = getFlashcardInfo(flashcard_front_name);
+        int actualLvl = Integer.parseInt(flashcardInfo.get(3));
+
+        // Creating delayList with recursion delays
+        // 5min, 30min, 6h, 1d, 4d, 2w, 1m, 3m, 6m
+        List<Long> delayList = new ArrayList<Long>();
+        delayList.add((long) 0); // 0min
+        delayList.add((long) 5 * 60 * 1000); // 5min
+        delayList.add((long) 30 * 60 * 1000); // 30min
+        delayList.add((long) 6 * 60 * 60 * 1000); // 6h
+        delayList.add((long) 24 * 60 * 60 * 1000); // 1d
+        delayList.add((long) 4 * 24 * 60 * 60 * 1000); // 4d
+        delayList.add((long) 14 * 24 * 60 * 60 * 1000); // 2w (14d)
+        delayList.add((long) 30 * 24 * 60 * 60 * 1000); // 1m
+        delayList.add((long) 3 * 30 * 24 * 60 * 60 * 1000); // 3m
+        delayList.add((long) 6 * 30 * 24 * 60 * 60 * 1000); // 6m
+
+        // Adding new lvl and date
+        String newLvl;
+        String newDate;
+        long timeDelay;
+        if (isRight) {
+            newLvl = Integer.toString(actualLvl + 1);
+            timeDelay = delayList.get(Integer.parseInt(newLvl));
+            newDate = Long.toString(d.getTime() + timeDelay);
+        } else {
+            if (actualLvl <= 2) {
+                newLvl = "0";
+            } else {
+                newLvl = Integer.toString(actualLvl - 2);
+            }
+            timeDelay = delayList.get(Integer.parseInt(newLvl));
+            newDate = Long.toString(d.getTime() + timeDelay);
+        }
+
+        // Updates values in database
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_LVL, newLvl);
+        values.put(COLUMN_DATE, newDate);
+
+        db.update(TABLE_NAME, values, COLUMN_FRONT + "=?", new String[]{flashcard_front_name});
+    }
+
+    public ArrayList<String>  getFlashcardInfo(String flashcard_front_name) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_FRONT + "='" + flashcard_front_name + "';";
+        Cursor cursor = db.rawQuery(query, null);
+
+        ArrayList<String> flashcardInfo = new ArrayList<>();
+        if(cursor.moveToNext()) {
+            for (int i=0; i < 10 ; i++) {
+                try {
+                    flashcardInfo.add(cursor.getString(i));
+                } finally {
+                    continue;
+                }
+            }
+        }
+        cursor.close();
+        return flashcardInfo;
     }
 
     public String normal_deck_name_to_coded(String normal_name) {
