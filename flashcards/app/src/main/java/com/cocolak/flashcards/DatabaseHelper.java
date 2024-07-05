@@ -143,7 +143,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String fixedTableName = cursor.getString(0); // Normal table name
                 String tableName = cursor.getString(1); // Generated table name
                 String flashcardsNumber = Integer.toString(getFlashcardsNumber(tableName)); // Get number from db by coded/generated table name
-                decksInfos.add(Arrays.asList(fixedTableName, flashcardsNumber)); // Pass preaty name and flashcards number
+                String leftFlashcardsNumber = Integer.toString(getLeftFlashcardsNumber(tableName)); // Get left flashcards number from db by coded/generated table name
+                decksInfos.add(Arrays.asList(fixedTableName, flashcardsNumber, leftFlashcardsNumber)); // Pass pretty name, flashcards number and left flashcards number
             } while (cursor.moveToNext());
         }
 
@@ -170,13 +171,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     public int getFlashcardsNumber(String TABLE_NAME) {
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT id FROM " + TABLE_NAME;
+        String query = "SELECT id FROM " + TABLE_NAME; // Take all flashcards from deck
         Cursor cursor = db.rawQuery(query, null);
 
-        int flashcardsNumber = cursor.getCount();
-        cursor.close();
+        int flashcardsNumber = cursor.getCount(); // Count these flashcards
 
+        cursor.close();
         return flashcardsNumber;
+    }
+
+    public int getLeftFlashcardsNumber(String TABLE_NAME) {
+        Date d = new Date();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT id FROM " + TABLE_NAME + " WHERE " + COLUMN_DATE + "<='" +d.getTime() + "';"; // Take all left flashcards for now
+        Cursor cursor = db.rawQuery(query, null);
+
+        int leftFlashcardsNumber = cursor.getCount(); // Count these flashcards
+
+        cursor.close();
+        return leftFlashcardsNumber;
     }
 
     public ArrayList<ArrayList<String>> getTodaySession() {
@@ -206,7 +219,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // Creating delayList with recursion delays
         // 5min, 30min, 6h, 1d, 4d, 2w, 1m, 3m, 6m
         List<Long> delayList = new ArrayList<Long>();
-        delayList.add((long) 0); // 0min
+        delayList.add((long) 0); // 0ms
         delayList.add((long) 5 * 60 * 1000); // 5min
         delayList.add((long) 30 * 60 * 1000); // 30min
         delayList.add((long) 6 * 60 * 60 * 1000); // 6h

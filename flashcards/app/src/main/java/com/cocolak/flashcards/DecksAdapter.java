@@ -28,13 +28,14 @@ public class DecksAdapter extends RecyclerView.Adapter<DecksAdapter.MyViewHolder
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView nameTextView, countTextView;
+        TextView nameTextView, countTextView, countLeftTextView;
         Button removeButton;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             nameTextView = itemView.findViewById(R.id.nameTextView);
             countTextView = itemView.findViewById(R.id.countTextView);
+            countLeftTextView = itemView.findViewById(R.id.countLeftTextView);
             removeButton = itemView.findViewById(R.id.removeButton);
         }
     }
@@ -57,6 +58,7 @@ public class DecksAdapter extends RecyclerView.Adapter<DecksAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull DecksAdapter.MyViewHolder holder, int position) {
         holder.nameTextView.setText(deckModels.get(position).getDeckName());
         holder.countTextView.setText(deckModels.get(position).getDeckNumber());
+        holder.countLeftTextView.setText(deckModels.get(position).getDeckNumberLeft());
 
         String item = deckModels.get(position).getDeckName();
 

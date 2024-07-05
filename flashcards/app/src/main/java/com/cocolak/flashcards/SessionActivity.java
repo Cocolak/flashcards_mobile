@@ -17,7 +17,7 @@ public class SessionActivity extends AppCompatActivity {
     DatabaseHelper dbHelper;
     ArrayList<ArrayList<String>> todaySession;
     int i = 0;
-    TextView deckTitle, frontText, backText;
+    TextView deckTitle, leftFlashcardsNumber, frontText, backText;
     CardView frontCard, backCard;
     Button backButton, optionsButton, dknowButton, knowButton, showButton;
 
@@ -36,6 +36,7 @@ public class SessionActivity extends AppCompatActivity {
         frontCard = findViewById(R.id.frontCard);
         frontText = findViewById(R.id.frontText);
         deckTitle = findViewById(R.id.deckTitle);
+        leftFlashcardsNumber = findViewById(R.id.leftFlashcardsNumber);
         backCard = findViewById(R.id.backCard);
         backText = findViewById(R.id.backText);
         backButton = findViewById(R.id.backButton);
@@ -58,7 +59,7 @@ public class SessionActivity extends AppCompatActivity {
         dknowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setNewDate(false);
+                setNewData(false);
                 loadFlashcard(); // next flashcard
             }
         });
@@ -66,7 +67,7 @@ public class SessionActivity extends AppCompatActivity {
         knowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setNewDate(true);
+                setNewData(true);
                 loadFlashcard(); // next flashcard
             }
         });
@@ -82,6 +83,8 @@ public class SessionActivity extends AppCompatActivity {
 
     public void loadFlashcard() {
         if (i < todaySession.size()) {
+            String leftCardsText = "Left: " + dbHelper.getLeftFlashcardsNumber(dbHelper.normal_deck_name_to_coded(deck_name));
+            leftFlashcardsNumber.setText(leftCardsText);
             dknowButton.setVisibility(View.GONE);
             knowButton.setVisibility(View.GONE);
             backCard.setVisibility(View.INVISIBLE);
@@ -106,7 +109,7 @@ public class SessionActivity extends AppCompatActivity {
         showButton.setVisibility(View.GONE);
     }
 
-    public void setNewDate(Boolean isRight) {
+    public void setNewData(Boolean isRight) {
         String flashcard_name = frontText.getText().toString();
         dbHelper.setupFlashcard(isRight, flashcard_name);
     }

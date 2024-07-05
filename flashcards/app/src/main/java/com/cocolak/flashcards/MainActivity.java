@@ -114,14 +114,14 @@ public class MainActivity extends AppCompatActivity implements DecksAdapter.OnIt
         deckModels = new ArrayList<>();
         List<List<String>> tablesNames = dbHelper.getDecksInfo();
         for(int i = 0; i<tablesNames.size();i++) {
-            deckModels.add(new DeckModel(tablesNames.get(i).get(0), tablesNames.get(i).get(1)));
+            deckModels.add(new DeckModel(tablesNames.get(i).get(0), tablesNames.get(i).get(1), tablesNames.get(i).get(2)));
         }
     }
     public void refreshData() {
         deckModels.clear();
         List<List<String>> tablesNames = dbHelper.getDecksInfo();
         for(int i = 0; i<tablesNames.size();i++) {
-            deckModels.add(new DeckModel(tablesNames.get(i).get(0), tablesNames.get(i).get(1)));
+            deckModels.add(new DeckModel(tablesNames.get(i).get(0), tablesNames.get(i).get(1), tablesNames.get(i).get(2)));
         }
         adapter.notifyDataSetChanged();
     }
