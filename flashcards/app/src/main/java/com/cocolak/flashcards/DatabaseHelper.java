@@ -122,7 +122,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_LVL + " TEXT, " +
                 COLUMN_DATE + " TEXT)";
         db.execSQL(createTable);
-
     }
 
     public void removeDeck(String deck_name) {
@@ -152,22 +151,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return decksInfos;
     }
 
-    public void addFlashcard(String front, String back) {
+    public void addFlashcard(String front, String back, long type) {
         Date d = new Date();
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(COLUMN_FRONT, front);
-        contentValues.put(COLUMN_BACK, back);
-        contentValues.put(COLUMN_LVL, "0");
-        contentValues.put(COLUMN_DATE, Long.toString(d.getTime()));
 
-        long result = db.insert(TABLE_NAME, null, contentValues);
-        if(result != -1) {
-            Toast.makeText(context, "Flashcard added successfully.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Adding flashcard failed.", Toast.LENGTH_SHORT).show();
+        if (type == 0) { // Basic
+            contentValues.put(COLUMN_FRONT, front);
+            contentValues.put(COLUMN_BACK, back);
+            contentValues.put(COLUMN_LVL, "0");
+            contentValues.put(COLUMN_DATE, Long.toString(d.getTime()));
+
+            long result = db.insert(TABLE_NAME, null, contentValues);
+            if(result != -1) {
+                Toast.makeText(context, "Basic flashcard added successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Adding flashcard failed.", Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (type == 1) { // Basic (and reversed card)
+            contentValues.put(COLUMN_FRONT, front);
+            contentValues.put(COLUMN_BACK, back);
+            contentValues.put(COLUMN_LVL, "0");
+            contentValues.put(COLUMN_DATE, Long.toString(d.getTime()));
+            long result1 = db.insert(TABLE_NAME, null, contentValues);
+
+            contentValues.clear();
+
+            contentValues.put(COLUMN_FRONT, back);
+            contentValues.put(COLUMN_BACK, front);
+            contentValues.put(COLUMN_LVL, "0");
+            contentValues.put(COLUMN_DATE, Long.toString(d.getTime()));
+            long result2 = db.insert(TABLE_NAME, null, contentValues);
+
+            if(result1 != -1 || result2 != -1) {
+                Toast.makeText(context, "Reversed flashcards added successfully.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, "Adding flashcards failed.", Toast.LENGTH_SHORT).show();
+            }
         }
 
+    }
+
+    public void removeFlashcard(String frontText) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_FRONT + "='" + frontText + "';");
+        Toast.makeText(context, "Flashcard Removed Successfully", Toast.LENGTH_SHORT).show();
     }
     public int getFlashcardsNumber(String TABLE_NAME) {
         SQLiteDatabase db = this.getReadableDatabase();

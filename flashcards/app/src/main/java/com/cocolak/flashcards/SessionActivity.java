@@ -2,8 +2,10 @@ package com.cocolak.flashcards;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +50,6 @@ public class SessionActivity extends AppCompatActivity {
         deckTitle.setText(deck_name);
         loadFlashcard();
 
-
         showButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +77,13 @@ public class SessionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        optionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showOptions(v);
             }
         });
 
@@ -114,4 +122,23 @@ public class SessionActivity extends AppCompatActivity {
         dbHelper.setupFlashcard(isRight, flashcard_name);
     }
 
+    private void showOptions(View v) {
+        PopupMenu optionsMenu = new PopupMenu(SessionActivity.this, v);
+        optionsMenu.getMenuInflater().inflate(R.menu.menu_add, optionsMenu.getMenu());
+
+        optionsMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.nav_remove) {
+                    // TODO: You sure?
+                    String flashcard_front = frontText.getText().toString();
+                    dbHelper.removeFlashcard(flashcard_front);
+                    loadFlashcard();
+                }
+                return true;
+            }
+        });
+
+        optionsMenu.show();
+    }
 }
